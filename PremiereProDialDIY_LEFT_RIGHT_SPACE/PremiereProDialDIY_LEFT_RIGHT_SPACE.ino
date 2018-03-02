@@ -1,3 +1,14 @@
+// [ Instruction ]
+//Youtube https://youtu.be/FACm5D3bskQ
+//Manual https://sites.google.com/view/100happythings/15-premiere-pro-dial-diy
+//Source Code https://github.com/happythingsmaker/PremiereProDialDIY
+//3D Printing File https://www.thingiverse.com/thing:2810760
+
+//[ Parts and Tools ]
+//Rotational encoder with switch http://ebay.to/2t6I0f4  ($1)
+//Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
+//Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
+
 #include "Keyboard.h"
 
 #define  outputB 15
@@ -6,8 +17,7 @@
 #define PIN_5V  A2
 #define PIN_GND  A3
 
-
-int counter = 0 ;
+int counter = 0;
 int aState;
 int aLastState;
 int functionFlag = 0;
@@ -17,8 +27,6 @@ void setup() {
 
   Keyboard.begin();
 
-
-  // put your setup code here, to run once:
   pinMode(outputA, INPUT);
   pinMode(outputB, INPUT);
   pinMode(BUTTON, INPUT_PULLUP);
