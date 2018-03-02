@@ -11,24 +11,22 @@
 
 #include "Keyboard.h"
 
-#define  outputB 15
-#define  outputA A0
+#define  OUTPUT_B 15
+#define  OUTPUT_A A0
 #define  BUTTON A1
 #define PIN_5V  A2
 #define PIN_GND  A3
 
-int counter = 0;
-int aState;
-int aLastState;
-int functionFlag = 0;
+bool aState;
+bool aLastState;
 int lastButtonState = 0;
 
 void setup() {
 
   Keyboard.begin();
 
-  pinMode(outputA, INPUT);
-  pinMode(outputB, INPUT);
+  pinMode(OUTPUT_A, INPUT);
+  pinMode(OUTPUT_B, INPUT);
   pinMode(BUTTON, INPUT_PULLUP);
 
   pinMode(PIN_5V, OUTPUT);
@@ -38,7 +36,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  aLastState = digitalRead(outputA);
+  aLastState = digitalRead(OUTPUT_A);
 }
 bool count = 0;
 bool keyFlag = false;
@@ -46,26 +44,22 @@ long lastClickTime = 0;
 long lastRotateTime = 0;
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
   if (millis() - lastClickTime > 1000) {
-    aState = digitalRead(outputA);
+    aState = digitalRead(OUTPUT_A);
     if (aState != aLastState) {
-      if (digitalRead(outputB) != aState) {
-        counter ++;
+      if (digitalRead(OUTPUT_B) != aState) {
         Keyboard.press(KEY_LEFT_ARROW);
-        Keyboard.releaseAll();
       } else {
-        counter --;
         Keyboard.press(KEY_RIGHT_ARROW);
-        Keyboard.releaseAll();
       }
+      Keyboard.releaseAll();
       aLastState = aState;
     }
+
+
     if (digitalRead(BUTTON) == LOW) {
       if (lastButtonState  == HIGH) {
-        if (functionFlag ++ >= 1 ) {
-          functionFlag = 0;
-        }
         Keyboard.print(" ");
         lastClickTime = millis();
       }
