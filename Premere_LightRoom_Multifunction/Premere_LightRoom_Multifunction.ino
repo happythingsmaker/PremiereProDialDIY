@@ -9,6 +9,9 @@
 //Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
 //Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
 
+// Resolution : some encoder is too sensitive. this reduces sensitivity.
+#define RESOLUTION 2
+
 // include a Keyboard library
 #include "Keyboard.h"
 
@@ -47,7 +50,6 @@ bool lastButtonState = 0;
 #define LIGHTROOM_MODE 1
 int mode = PREMIERE_MODE;
 const int numMode = 2;
-
 
 // void setup(){} function is for one time setting
 void setup() {
@@ -91,13 +93,10 @@ void setup() {
   aLastState = digitalRead(OUTPUT_A);
 }
 
-
 // in order to prevent chattering, we need to check the moment when was the last click moment
 // for 1000ms, we will ignore all signals
 long lastClickTime = 0;
-
-
-
+long tempCount = 0;
 
 // this loop() function repeats its code eternally
 void loop() {
@@ -155,28 +154,34 @@ void changeMode() {
 }
 
 void rotateLeft() {
-  if (mode == PREMIERE_MODE) {
-    Keyboard.press(KEY_LEFT_ARROW);
-  } else if (mode == LIGHTROOM_MODE) {
-    Keyboard.press(KEY_UP_ARROW);
+  if (tempCount++ % RESOLUTION == 0) {
+    if (mode == PREMIERE_MODE) {
+      Keyboard.press(KEY_LEFT_ARROW);
+    } else if (mode == LIGHTROOM_MODE) {
+      Keyboard.press(KEY_UP_ARROW);
+    }
+    Keyboard.releaseAll();
   }
-  Keyboard.releaseAll();
 }
 
 void rotateRight() {
-  if (mode == PREMIERE_MODE) {
-    Keyboard.press(KEY_RIGHT_ARROW);
-  } else if (mode == LIGHTROOM_MODE) {
-    Keyboard.press(KEY_DOWN_ARROW);
+  if (tempCount++ % RESOLUTION == 0) {
+    if (mode == PREMIERE_MODE) {
+      Keyboard.press(KEY_RIGHT_ARROW);
+    } else if (mode == LIGHTROOM_MODE) {
+      Keyboard.press(KEY_DOWN_ARROW);
+    }
+    Keyboard.releaseAll();
   }
-  Keyboard.releaseAll();
 }
 
 void pressButton() {
-  if (mode == PREMIERE_MODE) {
-    Keyboard.print("c");
-  } else if (mode == LIGHTROOM_MODE) {
-    Keyboard.press(KEY_RIGHT_ARROW);
-    Keyboard.releaseAll();
+  if (tempCount++ % RESOLUTION == 0) {
+    if (mode == PREMIERE_MODE) {
+      Keyboard.print("c");
+    } else if (mode == LIGHTROOM_MODE) {
+      Keyboard.press(KEY_RIGHT_ARROW);
+      Keyboard.releaseAll();
+    }
   }
 }
