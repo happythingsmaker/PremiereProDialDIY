@@ -176,12 +176,10 @@ void rotateRight() {
 }
 
 void pressButton() {
-  if (tempCount++ % RESOLUTION == 0) {
-    if (mode == PREMIERE_MODE) {
-      Keyboard.print("c");
-    } else if (mode == LIGHTROOM_MODE) {
-      Keyboard.press(KEY_RIGHT_ARROW);
-      Keyboard.releaseAll();
-    }
+  if (mode == PREMIERE_MODE) {
+    Keyboard.print("c");
+  } else if (mode == LIGHTROOM_MODE) {
+    Keyboard.press(KEY_RIGHT_ARROW);
+    Keyboard.releaseAll();
   }
 }
