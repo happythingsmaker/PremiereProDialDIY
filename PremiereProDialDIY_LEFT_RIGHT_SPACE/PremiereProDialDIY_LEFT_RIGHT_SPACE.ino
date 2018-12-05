@@ -142,4 +142,4 @@ void loop() {
       lastButtonState = HIGH;
     }
   }
-}﻿
+}
