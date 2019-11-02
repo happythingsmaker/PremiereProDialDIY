@@ -68,7 +68,7 @@ void setup() {
 
 
   // OUTPUT_B is for INPUT, must be pull-up
-  pinMode(OUTPUT_B, INPUT_PULLUP);
+  pinMode(OUTPUT_B, INPUT_PULLUP);                                                                                                                                                        
 
 
   // BUTTON is for INPUT
@@ -92,6 +92,8 @@ void setup() {
   // this is a kind of trick, but it works well.
   pinMode(PIN_GND_BUTTON, OUTPUT);
   digitalWrite(PIN_GND_BUTTON, LOW);
+
+
 
 
   // read a signal from OUTPUT_A
@@ -132,7 +134,6 @@ void loop() {
   if (digitalRead(BUTTON) == LOW) {
     if (lastButtonState == LOW) {
       // LOW -> LOW : nothing to do
-
     } else {
       // HIGH-> LOW
       delay(300); // ignoring chattering
@@ -141,8 +142,7 @@ void loop() {
   } else {
     if (lastButtonState == LOW) {   // LOW -> HIGH : check whether long press or not
       //changeMode();
-      Keyboard.press(KEY_ENTER);
-      Keyboard.release(KEY_ENTER);
+      Keyboard.println();
     }
     else {                          // HIGH -> HIGH : noting to do
     }
@@ -159,20 +159,15 @@ void changeMode() {
 
 void rotateLeft() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == HORIZONTAL_MODE ) {
-      Keyboard.press(KEY_TAB);
-    }
+    Keyboard.press(KEY_TAB);
     Keyboard.releaseAll();
   }
 }
 
-
 void rotateRight() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == HORIZONTAL_MODE) {
-      Keyboard.press(KEY_LEFT_SHIFT);
-      Keyboard.press(KEY_TAB);
-    }
+    Keyboard.press(KEY_LEFT_SHIFT);
+    Keyboard.press(KEY_TAB);
     Keyboard.releaseAll();
   }
 }
