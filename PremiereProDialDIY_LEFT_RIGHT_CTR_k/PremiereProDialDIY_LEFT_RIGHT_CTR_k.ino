@@ -104,10 +104,12 @@ void loop() {
 
         // send Left Arrow
         Keyboard.press(KEY_LEFT_ARROW);
+        delay(8);
       } else {
 
         // send Right Arrow
         Keyboard.press(KEY_RIGHT_ARROW);
+        delay(8);
       }
 
       Keyboard.releaseAll();
