@@ -157,6 +157,5 @@ void rotateRight() {
 }
 
 void pressButton() {
-  Keyboard.println("");   // this means enter
-  Keyboard.releaseAll();
+  Keyboard.println();
 }
