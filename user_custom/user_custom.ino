@@ -122,8 +122,10 @@ void loop() {
     // https://www.youtube.com/watch?v=v4BbSzJ-hz4
     if (digitalRead(OUTPUT_B) != aState) {
       rotateLeft();
+      delay(8);
     } else {
       rotateRight();
+      delay(8);
     }
     // save current State as last State
     aLastState = aState;
