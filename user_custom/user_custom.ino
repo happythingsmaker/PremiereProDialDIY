@@ -1,111 +1,119 @@
-// [ Instruction ]
-//Youtube https://youtu.be/FACm5D3bskQ
-//Manual https://sites.google.com/view/100happythings/15-premiere-pro-dial-diy
-//Source Code https://github.com/happythingsmaker/PremiereProDialDIY
-//3D Printing File https://www.thingiverse.com/thing:2810760
-
-//[ Parts and Tools ]
-//Rotational encoder with switch http://ebay.to/2t6I0f4  ($1)
-//Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
-//Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
-
 // Resolution : some encoder is too sensitive. this reduces sensitivity.
 #define RESOLUTION 2
+
 
 // include a Keyboard library
 #include "Keyboard.h"
 
+
 // include a EEPROM library for memorizing last function
 #include <EEPROM.h>
 
-// From here, text "OUTPUT_B" is going to be replaced with "15".
-#define  OUTPUT_B 15
 
 // "OUTPUT_A" is going to be replaced with "A0".
-#define  OUTPUT_A A0
+#define  OUTPUT_A 2
+
+
+// "PIN_GND_ENCODER" is going to be replaced with "3".
+#define PIN_GND_ENCODER  3
+
+
+// "OUTPUT_B" is going to be replaced with "15".
+#define  OUTPUT_B 4
+
 
 // "BUTTON" is going to be replaced with "A1".
 #define  BUTTON A1
 
-// "PIN_5V" is going to be replaced with "A2".
-#define PIN_5V  A2
 
-// "PIN_GND" is going to be replaced with "A3".
-#define PIN_GND  A3
+// "PIN_GND_BUTTON" is going to be replaced with "A3".
+#define PIN_GND_BUTTON  A3
+
 
 // Declare variables aState, aLastState for checking the state of OUTPUT_A of the encoder
 bool aState;
 
+
 // We need to save the previous state of OUTPUT_A
 bool aLastState;
 
+
 // this variable for check the state of button.
-// in order to prevent the button from chattering, we need to check the first moment the button is pressed.
-// Becasue when a button pressed, the button usually sends a lot of signals.
-// So, we need to ignore following noise signals for a while.
 bool lastButtonState = 0;
 
+
 // mode selection
-#define PREMIERE_MODE 0
-#define LIGHTROOM_MODE 1
-int mode = PREMIERE_MODE;
+#define HORIZONTAL_MODE 0
+#define VERTICAL_MODE 1
+
+
+int mode = HORIZONTAL_MODE;
 const int numMode = 2;
+
 
 // void setup(){} function is for one time setting
 void setup() {
 
+
   //read the last mode
   mode = EEPROM.read(0);
+
 
   // in order to use the Keyboard library, begin() is necessary
   Keyboard.begin();
 
-  // OUTPUT_A (A0) is for INPUT
-  pinMode(OUTPUT_A, INPUT);
 
-  // OUTPUT_B (15) is for INPUT
-  pinMode(OUTPUT_B, INPUT);
+  // OUTPUT_A is for INPUT. must be pull-up
+  pinMode(OUTPUT_A, INPUT_PULLUP);
 
-  // BUTTON (A1) is for INPUT
+
+  // OUTPUT_B is for INPUT, must be pull-up
+  pinMode(OUTPUT_B, INPUT_PULLUP);
+
+
+  // BUTTON is for INPUT
   // Most pin has thier own pull-up resistor.
   // INPUT_PULLUP makes the pin high.
-  // a leg of button is connected with this pin and GND
+  // a leg of button is connected with this pin and another pin which is grounded.
   // when the button is not pressed, the pin reads HIGH signal because of this PULL-UP
   // when the button is pressed, pin is going to be LOW which means "pressed"
   pinMode(BUTTON, INPUT_PULLUP);
-  
-  // PIN_5V (A2) is for OUTPUT
-  // This pin is used for giving 5V to the encoder.
-  // normally, 5v is coming from VCC, but, I didn't want to use any wires
-  // So, this is a kind of trick, but it works well.
-  pinMode(PIN_5V, OUTPUT);
-  digitalWrite(PIN_5V, HIGH);
 
-    // PIN_GND (A3) is for OUTPUT
-  // This pin is used for giving GND to the encoder.
-  // normally, GND is coming from GND, but, I didn't want to use any wires
-  // So, this is a kind of trick, but it works well.
-  pinMode(PIN_GND, OUTPUT);
-  digitalWrite(PIN_GND, LOW);
-  
+
+  // PIN_GND_ENCODER is for OUTPUT
+  // This pin is used for giving GROUND to the encoder.
+  // this is a kind of trick, but it works well.
+  pinMode(PIN_GND_ENCODER, OUTPUT);
+  digitalWrite(PIN_GND_ENCODER, LOW);
+
+
+  // PIN_GND_BUTTON is for OUTPUT
+  // This pin is used for giving GND to the button.
+  // this is a kind of trick, but it works well.
+  pinMode(PIN_GND_BUTTON, OUTPUT);
+  digitalWrite(PIN_GND_BUTTON, LOW);
+
+
   // read a signal from OUTPUT_A
   // this is for initialization
   aLastState = digitalRead(OUTPUT_A);
 }
 
-// in order to prevent chattering, we need to check the moment when was the last click moment
-// for 1000ms, we will ignore all signals
-long lastClickTime = 0;
+
 long tempCount = 0;
+
 
 // this loop() function repeats its code eternally
 void loop() {
 
+
   //read signal from OUTPUT_A and save its state to aState
   aState = digitalRead(OUTPUT_A);
 
+
   // if aLastState is not currentState, it meant there's something changed.
   if (aState != aLastState) {
+
 
     // read another pin's state.
     // if you want to know about the theory, watch this video
@@ -119,6 +127,7 @@ void loop() {
     aLastState = aState;
   }
 
+
   // read button (short or long)
   if (digitalRead(BUTTON) == LOW) {
     if (lastButtonState == LOW) {
@@ -126,21 +135,14 @@ void loop() {
 
     } else {
       // HIGH-> LOW
-      lastClickTime = millis();
       delay(300); // ignoring chattering
-
     }
     lastButtonState = LOW;
   } else {
-
     if (lastButtonState == LOW) {   // LOW -> HIGH : check whether long press or not
-      if (millis() - lastClickTime >= 3000) {
-        // long press : mode change
-        changeMode();
-      } else {
-        // short press :
-        pressButton();
-      }
+      //changeMode();
+      Keyboard.press(KEY_ENTER);
+      Keyboard.release(KEY_ENTER);
     }
     else {                          // HIGH -> HIGH : noting to do
     }
@@ -148,34 +150,29 @@ void loop() {
   }
 }
 
+
 void changeMode() {
   mode = ++mode % numMode;
   EEPROM.write(0, mode);
 }
 
+
 void rotateLeft() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == PREMIERE_MODE) {
+    if (mode == HORIZONTAL_MODE ) {
       Keyboard.press(KEY_TAB);
-    } else if (mode == LIGHTROOM_MODE) {
-      Keyboard.press(KEY_PAGE_UP);
     }
     Keyboard.releaseAll();
   }
 }
+
 
 void rotateRight() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == PREMIERE_MODE) {
+    if (mode == HORIZONTAL_MODE) {
       Keyboard.press(KEY_LEFT_SHIFT);
       Keyboard.press(KEY_TAB);
-    } else if (mode == LIGHTROOM_MODE) {
-      Keyboard.press(KEY_PAGE_DOWN);
     }
     Keyboard.releaseAll();
   }
-}
-
-void pressButton() {
-  Keyboard.println();
 }
