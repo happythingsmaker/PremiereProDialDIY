@@ -19,13 +19,19 @@
 #include <EEPROM.h>
 
 // From here, text "OUTPUT_B" is going to be replaced with "15".
-#define  OUTPUT_B 2
+#define  OUTPUT_B 15
 
 // "OUTPUT_A" is going to be replaced with "A0".
-#define  OUTPUT_A 3
+#define  OUTPUT_A A0
 
 // "BUTTON" is going to be replaced with "A1".
-#define  BUTTON 4
+#define  BUTTON A1
+
+// "PIN_5V" is going to be replaced with "A2".
+#define PIN_5V  A2
+
+// "PIN_GND" is going to be replaced with "A3".
+#define PIN_GND  A3
 
 // Declare variables aState, aLastState for checking the state of OUTPUT_A of the encoder
 bool aState;
@@ -55,10 +61,10 @@ void setup() {
   Keyboard.begin();
 
   // OUTPUT_A (A0) is for INPUT
-  pinMode(OUTPUT_A, INPUT_PULLUP);
+  pinMode(OUTPUT_A, INPUT);
 
   // OUTPUT_B (15) is for INPUT
-  pinMode(OUTPUT_B, INPUT_PULLUP);
+  pinMode(OUTPUT_B, INPUT);
 
   // BUTTON (A1) is for INPUT
   // Most pin has thier own pull-up resistor.
@@ -67,7 +73,21 @@ void setup() {
   // when the button is not pressed, the pin reads HIGH signal because of this PULL-UP
   // when the button is pressed, pin is going to be LOW which means "pressed"
   pinMode(BUTTON, INPUT_PULLUP);
+  
+  // PIN_5V (A2) is for OUTPUT
+  // This pin is used for giving 5V to the encoder.
+  // normally, 5v is coming from VCC, but, I didn't want to use any wires
+  // So, this is a kind of trick, but it works well.
+  pinMode(PIN_5V, OUTPUT);
+  digitalWrite(PIN_5V, HIGH);
 
+    // PIN_GND (A3) is for OUTPUT
+  // This pin is used for giving GND to the encoder.
+  // normally, GND is coming from GND, but, I didn't want to use any wires
+  // So, this is a kind of trick, but it works well.
+  pinMode(PIN_GND, OUTPUT);
+  digitalWrite(PIN_GND, LOW);
+  
   // read a signal from OUTPUT_A
   // this is for initialization
   aLastState = digitalRead(OUTPUT_A);
