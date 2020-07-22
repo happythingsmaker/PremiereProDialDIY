@@ -106,12 +106,14 @@ void loop() {
         // send Left Arrow
         if (tempCount ++ % 2 == 0) {
           Keyboard.press(KEY_LEFT_ARROW);
+          delay(8);
         }
       } else {
 
         // send Right Arrow
         if (tempCount ++ % 2 == 0) {
           Keyboard.press(KEY_RIGHT_ARROW);
+          delay(8);
         }
       }
 
