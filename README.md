@@ -10,7 +10,7 @@ So, I thought it would be nice if I had a dial for it.
 
 Youtube https://youtu.be/FACm5D3bskQ
 
-Manual https://sites.google.com/view/100happythings/15-premiere-pro-dial-diy
+Manual https://eunchan.me/Premiere-Pro-Lightroom-DIal-DIY-version-2-f097ab2f095145898f4f9f34fbc3312f
 
 Source Code https://github.com/happythingsmaker/PremiereProDialDIY
 
@@ -19,31 +19,10 @@ Source Code https://github.com/happythingsmaker/PremiereProDialDIY
 
 ## [ About the maker ]
 
-instagram  https://www.instagram.com/happythingsmaker/
 
-facebook  https://www.facebook.com/happyThingsMaker/
-
-blog  http://happyThingsMaker.com
+blog  http://eunchan.me
 
 
 ## [ Parts and Tools ]
 
-Rotational encoder with switch http://ebay.to/2t6I0f4  ($1)
-
-Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
-
-Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
-
-Alternative Knob http://ebay.to/2F5m7m6 ($1)
-
-
-
-Soldering Tools http://ebay.to/2Gw6Qae
-
-Soldering Hand http://ebay.to/2ETtQn9
-
-Hot melt glue gun http://ebay.to/2sKDKSs
-
-3d printer http://ebay.to/2oB7Jrm
-
-3d printer filament http://ebay.to/2oABicJ
+https://eunchan.me/Premiere-Pro-Lightroom-DIal-DIY-version-2-f097ab2f095145898f4f9f34fbc3312f
