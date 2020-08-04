@@ -1,14 +1,12 @@
 
 // [ Instruction ]
 //Youtube https://youtu.be/FACm5D3bskQ
-//Manual https://sites.google.com/view/100happythings/15-premiere-pro-dial-diy
+//Manual https://eunchan.me/PREMIERE-PRO-CONTROLLER-DIAL-DIY-be53e66af7524374acd96ad322068a4f
 //Source Code https://github.com/happythingsmaker/PremiereProDialDIY
 //3D Printing File https://www.thingiverse.com/thing:2810760
 
 //[ Parts and Tools ]
-//Rotational encoder with switch http://ebay.to/2t6I0f4  ($1)
-//Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
-//Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
+//https://eunchan.me/PREMIERE-PRO-CONTROLLER-DIAL-DIY-be53e66af7524374acd96ad322068a4f
 
 // include a Keyboard library
 #include "Keyboard.h"
