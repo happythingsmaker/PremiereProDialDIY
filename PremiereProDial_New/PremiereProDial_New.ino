@@ -1,13 +1,9 @@
-// [ Instruction ]
-//Youtube https://youtu.be/FACm5D3bskQ
-//Manual https://sites.google.com/view/100happythings/15-premiere-pro-dial-diy
-//Source Code https://github.com/happythingsmaker/PremiereProDialDIY
-//3D Printing File https://www.thingiverse.com/thing:2810760
+// Youtube : Eunchan Park
+// https://www.youtube.com/watch?v=dJJ1wlJPqwE
 
-//[ Parts and Tools ]
-//Rotational encoder with switch http://ebay.to/2t6I0f4  ($1)
-//Arduino pro micro http://ebay.to/2oxvIrw ($4.9)
-//Non Slip Rubber http://ebay.to/2oyFGc1 ($0.5)
+// left right
+// up down
+// everytime you clicks button, it changes arrow direction from horizontal to vertical
 
 // Resolution : some encoder is too sensitive. this reduces sensitivity.
 #define RESOLUTION 2
@@ -18,14 +14,21 @@
 // include a EEPROM library for memorizing last function
 #include <EEPROM.h>
 
-// From here, text "OUTPUT_B" is going to be replaced with "15".
-#define  OUTPUT_B 2
 
 // "OUTPUT_A" is going to be replaced with "A0".
-#define  OUTPUT_A 3
+#define  OUTPUT_A 2
+
+// "PIN_GND_ENCODER" is going to be replaced with "3".
+#define PIN_GND_ENCODER  3
+
+// "OUTPUT_B" is going to be replaced with "15".
+#define  OUTPUT_B 4
 
 // "BUTTON" is going to be replaced with "A1".
-#define  BUTTON 4
+#define  BUTTON A1
+
+// "PIN_GND_BUTTON" is going to be replaced with "A3".
+#define PIN_GND_BUTTON  A3
 
 // Declare variables aState, aLastState for checking the state of OUTPUT_A of the encoder
 bool aState;
@@ -34,15 +37,13 @@ bool aState;
 bool aLastState;
 
 // this variable for check the state of button.
-// in order to prevent the button from chattering, we need to check the first moment the button is pressed.
-// Becasue when a button pressed, the button usually sends a lot of signals.
-// So, we need to ignore following noise signals for a while.
 bool lastButtonState = 0;
 
 // mode selection
-#define PREMIERE_MODE 0
-#define LIGHTROOM_MODE 1
-int mode = PREMIERE_MODE;
+#define HORIZONTAL_MODE 0
+#define VERTICAL_MODE 1
+
+int mode = HORIZONTAL_MODE;
 const int numMode = 2;
 
 // void setup(){} function is for one time setting
@@ -54,28 +55,37 @@ void setup() {
   // in order to use the Keyboard library, begin() is necessary
   Keyboard.begin();
 
-  // OUTPUT_A (A0) is for INPUT
+  // OUTPUT_A is for INPUT. must be pull-up
   pinMode(OUTPUT_A, INPUT_PULLUP);
 
-  // OUTPUT_B (15) is for INPUT
+  // OUTPUT_B is for INPUT, must be pull-up
   pinMode(OUTPUT_B, INPUT_PULLUP);
 
-  // BUTTON (A1) is for INPUT
+  // BUTTON is for INPUT
   // Most pin has thier own pull-up resistor.
   // INPUT_PULLUP makes the pin high.
-  // a leg of button is connected with this pin and GND
+  // a leg of button is connected with this pin and another pin which is grounded.
   // when the button is not pressed, the pin reads HIGH signal because of this PULL-UP
   // when the button is pressed, pin is going to be LOW which means "pressed"
   pinMode(BUTTON, INPUT_PULLUP);
+
+  // PIN_GND_ENCODER is for OUTPUT
+  // This pin is used for giving GROUND to the encoder.
+  // this is a kind of trick, but it works well.
+  pinMode(PIN_GND_ENCODER, OUTPUT);
+  digitalWrite(PIN_GND_ENCODER, LOW);
+
+  // PIN_GND_BUTTON is for OUTPUT
+  // This pin is used for giving GND to the button.
+  // this is a kind of trick, but it works well.
+  pinMode(PIN_GND_BUTTON, OUTPUT);
+  digitalWrite(PIN_GND_BUTTON, LOW);
 
   // read a signal from OUTPUT_A
   // this is for initialization
   aLastState = digitalRead(OUTPUT_A);
 }
 
-// in order to prevent chattering, we need to check the moment when was the last click moment
-// for 1000ms, we will ignore all signals
-long lastClickTime = 0;
 long tempCount = 0;
 
 // this loop() function repeats its code eternally
@@ -105,24 +115,14 @@ void loop() {
   if (digitalRead(BUTTON) == LOW) {
     if (lastButtonState == LOW) {
       // LOW -> LOW : nothing to do
-
     } else {
       // HIGH-> LOW
-      lastClickTime = millis();
       delay(300); // ignoring chattering
-
     }
     lastButtonState = LOW;
   } else {
-
     if (lastButtonState == LOW) {   // LOW -> HIGH : check whether long press or not
-      if (millis() - lastClickTime >= 3000) {
-        // long press : mode change
-        changeMode();
-      } else {
-        // short press :
-        pressButton();
-      }
+      changeMode();
     }
     else {                          // HIGH -> HIGH : noting to do
     }
@@ -137,9 +137,9 @@ void changeMode() {
 
 void rotateLeft() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == PREMIERE_MODE) {
+    if (mode == HORIZONTAL_MODE ) {
       Keyboard.press(KEY_LEFT_ARROW);
-    } else if (mode == LIGHTROOM_MODE) {
+    } else if (mode == VERTICAL_MODE) {
       Keyboard.press(KEY_UP_ARROW);
     }
     Keyboard.releaseAll();
@@ -148,22 +148,12 @@ void rotateLeft() {
 
 void rotateRight() {
   if (tempCount++ % RESOLUTION == 0) {
-    if (mode == PREMIERE_MODE) {
+    if (mode == HORIZONTAL_MODE) {
       Keyboard.press(KEY_RIGHT_ARROW);
-    } else if (mode == LIGHTROOM_MODE) {
+    } else if (mode == VERTICAL_MODE) {
       Keyboard.press(KEY_DOWN_ARROW);
     }
     Keyboard.releaseAll();
   }
 }
 
-void pressButton() {
-
-  if (mode == PREMIERE_MODE) {
-    Keyboard.print("c");
-  } else if (mode == LIGHTROOM_MODE) {
-    Keyboard.press(KEY_RIGHT_ARROW);
-    Keyboard.releaseAll();
-
-  }
-}
