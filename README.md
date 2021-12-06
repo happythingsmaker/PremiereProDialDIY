@@ -1,3 +1,10 @@
+
+## [ kit ]
+
+If you want to buy a kit : https://www.etsy.com/listing/985194207/eunchan-custom-dial-version-2
+
+## [ hello! ]
+
 I’m really into making Youtube videos. 
 
 Sometimes I feel it is hard to rewind the moment I wanted pause. 
